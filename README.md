@@ -1,59 +1,324 @@
-# WhisperX Audio Transcription & Diarization
+# WhisperX Audio Intelligence Platform
 
-This project demonstrates an implementation of [WhisperX](https://github.com/m-bain/whisperX), providing fast automatic speech recognition (ASR) with word-level alignment and speaker diarization.
+A modular, deployable audio intelligence system built using WhisperX, Faster-Whisper, and Pyannote Audio.
 
-## Features
+This project provides:
 
-- **Fast Transcription**: Uses WhisperX (based on Faster-Whisper) for high-performance transcription.
-- **Word-Level Alignment**: Precise word timestamps using phoneme-based alignment models.
-- **Speaker Diarization**: Identification of different speakers in the audio using `pyannote-audio`.
-- **Multi-language Support**: Demonstrated with English (`meeting.wav`) and Hindi (`news.wav`).
+* Automatic Speech Recognition (ASR)
+* Word-level forced alignment
+* Optional speaker diarization
+* CPU-optimized inference
+* Gradio-based interactive interface
+* Hugging Face Spaces deployment support
 
-## Prerequisites
+---
 
-- **Python**: 3.10+
-- **GPU**: NVIDIA GPU with CUDA support is highly recommended for performance.
-- **Hugging Face Token**: Required to access the `pyannote/speaker-diarization-community-1` model.
+# Features
 
-## Setup
+## Automatic Speech Recognition (ASR)
 
-1. **Install Dependencies**:
-   ```bash
-   pip install whisperx python-dotenv
-   ```
-   *Note: You may also need to install `ffmpeg` on your system.*
+* Powered by WhisperX and Faster-Whisper
+* Fast and accurate transcription pipeline
+* Automatic language detection
+* Multi-language support
 
-2. **Environment Variables**:
-   Create a `.env` file in the root directory and add your Hugging Face token:
-   ```env
-   HF_TOKEN=your_huggingface_token_here
-   ```
+## Word-Level Alignment
 
-3. **Audio Files**:
-   Place your audio files (e.g., `.wav`) in the project directory.
+* Precise timestamp alignment for words and segments
+* Improved subtitle and transcript quality
+* Alignment using phoneme-based models
 
-## Usage
+## Speaker Diarization
 
-The main implementation is contained within the `whisperx_implementation.ipynb` Jupyter notebook. 
+* Optional speaker diarization using `pyannote-audio`
+* Assigns speaker labels to transcript segments
+* Lazy-loaded diarization model for improved performance
 
-1. Open the notebook in your preferred environment (VS Code, JupyterLab, etc.).
-2. Ensure your kernel is set to a Python environment where the dependencies are installed.
-3. Run the cells sequentially to:
-   - Load the Whisper model (`large-v2`).
-   - Transcribe audio files.
-   - Align the transcription for word-level timestamps.
-   - Perform speaker diarization and assign speakers to transcript segments.
+## CPU-Optimized Deployment
 
-## File Structure
+* Uses CPU-only PyTorch wheels
+* `int8` compute optimization
+* Designed for Hugging Face CPU Spaces
+* Audio length validation to avoid long-running inference
 
-- `whisperx_implementation.ipynb`: The core notebook containing the implementation.
-- `meeting.wav`: Sample audio file for English transcription and diarization.
-- `news.wav`: Sample audio file for Hindi transcription.
-- `.env`: (To be created) Configuration file for environment variables.
-- `hf.txt`: Contains Hugging Face related info.
+## Interactive Gradio Interface
 
-## Credits
+* Upload audio directly in browser
+* Toggle diarization on/off
+* View formatted transcripts with timestamps
+* Hugging Face Spaces ready
 
-- [WhisperX](https://github.com/m-bain/whisperX) by Max Bain.
-- [OpenAI Whisper](https://github.com/openai/whisper).
-- [Pyannote Audio](https://github.com/pyannote/pyannote-audio).
+---
+
+# Demo Architecture
+
+```text
+Audio Input
+    ↓
+WhisperX ASR
+    ↓
+Word-Level Alignment
+    ↓
+Optional Speaker Diarization
+    ↓
+Structured Transcript Output
+    ↓
+Gradio Interface
+```
+
+---
+
+# Project Structure
+
+```text
+project/
+│
+├── app.py              # Gradio frontend entrypoint
+├── pipeline.py         # Main inference pipeline
+├── utils.py            # Utilities and model loaders
+├── transcribe.py       # ASR transcription module
+├── align.py            # Alignment module
+├── diarize.py          # Speaker diarization utilities
+├── requirements.txt    # Python dependencies
+├── packages.txt        # System dependencies for HF Spaces
+├── README.md
+└── .gitignore
+```
+
+---
+
+# Technologies Used
+
+* WhisperX
+* Faster-Whisper
+* PyTorch
+* Pyannote Audio
+* Gradio
+* Transformers
+* Librosa
+* FFmpeg
+
+---
+
+# Setup
+
+## 1. Clone Repository
+
+```bash
+git clone https://github.com/chaitanyav23/WhisperX-Audio-Intelligence-Platform.git
+
+cd WhisperX-Audio-Intelligence-Platform/project
+```
+
+---
+
+# 2. Create Environment
+
+Recommended Python version:
+
+```text
+Python 3.10
+```
+
+Create conda environment:
+
+```bash
+conda create -n whisperx python=3.10
+
+conda activate whisperx
+```
+
+---
+
+# 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Install FFmpeg:
+
+## Ubuntu/Debian
+
+```bash
+sudo apt update
+sudo apt install ffmpeg
+```
+
+---
+
+# 4. Hugging Face Token
+
+Speaker diarization requires a Hugging Face token.
+
+Create a `.env` file:
+
+```env
+HF_TOKEN=your_huggingface_token
+```
+
+You must also:
+
+* Accept access to `pyannote/speaker-diarization-community-1`
+* Accept Hugging Face model terms
+
+---
+
+# Running the Application
+
+Launch the Gradio application:
+
+```bash
+python app.py
+```
+
+The application will start locally at:
+
+```text
+http://127.0.0.1:7860
+```
+
+---
+
+# Usage
+
+1. Upload an audio file
+2. Optionally enable speaker diarization
+3. Run the pipeline
+4. View timestamped transcript output
+
+Recommended audio length:
+
+```text
+< 2 minutes
+```
+
+for CPU inference.
+
+---
+
+# Example Output
+
+```text
+[1.23s - 4.88s] SPEAKER_00: Well, from my point of view, what Paul is proposing sounds fine.
+
+[5.66s - 16.65s] SPEAKER_00: I am a bit concerned about working with a system of core hours and then flexible hours.
+```
+
+---
+
+# Hugging Face Spaces Deployment
+
+This project is configured for deployment on Hugging Face Spaces.
+
+## Required Files
+
+```text
+app.py
+requirements.txt
+packages.txt
+```
+
+## packages.txt
+
+```text
+ffmpeg
+```
+
+## Add Secret
+
+Inside Hugging Face Space settings:
+
+```text
+Settings → Variables and Secrets
+```
+
+Add:
+
+```text
+HF_TOKEN
+```
+
+---
+
+# Optimization Features
+
+## Lazy Diarization Loading
+
+The diarization model is loaded only when required.
+
+Benefits:
+
+* Faster startup
+* Reduced memory usage
+* Better CPU deployment performance
+
+## CPU-Safe Torch Installation
+
+Uses:
+
+```text
+torch==2.8.0+cpu
+```
+
+instead of CUDA wheels for lightweight deployment.
+
+## int8 Inference
+
+Configured for CPU-efficient inference:
+
+```python
+COMPUTE_TYPE = "int8"
+```
+
+---
+
+# Future Improvements
+
+Planned additions:
+
+* SRT/VTT subtitle export
+* JSON transcript export
+* Speaker-aware summarization
+* Waveform visualization
+* Speaker timeline visualization
+* FastAPI backend deployment
+* Streaming ASR
+* Model selection support
+* Multilingual analytics
+
+---
+
+# Known Limitations
+
+* CPU inference is slower than GPU inference
+* Diarization significantly increases runtime
+* Very long audio files are not recommended on free CPU deployments
+* First diarization load may take time due to model downloads
+
+---
+
+# Credits
+
+## Core Technologies
+
+* WhisperX
+  [https://github.com/m-bain/whisperX](https://github.com/m-bain/whisperX)
+
+* OpenAI Whisper
+  [https://github.com/openai/whisper](https://github.com/openai/whisper)
+
+* Pyannote Audio
+  [https://github.com/pyannote/pyannote-audio](https://github.com/pyannote/pyannote-audio)
+
+* Faster-Whisper
+  [https://github.com/SYSTRAN/faster-whisper](https://github.com/SYSTRAN/faster-whisper)
+
+---
+
+# Repository
+
+GitHub Repository:
+
+[https://github.com/chaitanyav23/WhisperX-Audio-Intelligence-Platform](https://github.com/chaitanyav23/WhisperX-Audio-Intelligence-Platform)
+
